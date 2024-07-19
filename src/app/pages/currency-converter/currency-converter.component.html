@@ -1,70 +1,35 @@
 <div class="page-container" fxLayout="column" fxLayoutAlign="start center">
-  <!-- Title -->
-  <p class="page-title">Currency Converter</p>
-  <span class="line"></span>
+    <!-- Title -->
+    <p class="page-title">Currency Converter</p>
+    <span class="line"></span>
 
-  <div class="form-container" fxLayout="column" fxLayoutAlign="center center">
-    <div
-      class="form-row"
-      fxLayout="row"
-      fxLayoutAlign="center center"
-      fxLayoutGap="40px"
-      fxLayoutGap.xs="10px"
-    >
-      <mat-form-field appearance="outline" fxFlex="25" fxFlex.xs="48">
-        <mat-label>From:</mat-label>
-        <mat-select
-          [formControl]="form.get('fromCurrency')"
-          (ngModelChange)="getConversionRate('from')"
-        >
-          <mat-option
-            *ngFor="let currency of currencyList"
-            [value]="currency.id"
-            >{{ currency.description }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      <mat-form-field appearance="outline" fxFlex="25" fxFlex.xs="48">
-        <mat-label>To:</mat-label>
-        <mat-select
-          [formControl]="form.get('toCurrency')"
-          (ngModelChange)="getConversionRate('from')"
-        >
-          <mat-option
-            *ngFor="let currency of currencyList"
-            [value]="currency.id"
-            >{{ currency.description }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
+    <div class="form-container" fxLayout="column" fxLayoutAlign="center center">
+        <div class="form-row" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="40px" fxLayoutGap.xs="10px">
+            <mat-form-field appearance="outline" fxFlex="25" fxFlex.xs="48">
+                <mat-label>From:</mat-label>
+                <mat-select [formControl]="form.get('fromCurrency')">
+                    <mat-option *ngFor="let currency of currencyList" [value]="currency.id">{{ currency.description }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" fxFlex="25" fxFlex.xs="48">
+                <mat-label>To:</mat-label>
+                <mat-select [formControl]="form.get('toCurrency')">
+                    <mat-option *ngFor="let currency of currencyList" [value]="currency.id">{{ currency.description }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="form-row" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="40px" fxLayoutGap.xs="10px">
+            <mat-form-field appearance="outline" fxFlex="25" fxFlex.xs="48">
+                <mat-label>Enter an amount</mat-label>
+                <input matInput placeholder="Enter an amount" type="number" [formControl]="form.get('fromAmount')" />
+            </mat-form-field>
+            <mat-form-field appearance="outline" fxFlex="25" fxFlex.xs="48">
+                <mat-label>Enter an amount</mat-label>
+                <input matInput placeholder="Enter an amount" type="number" [formControl]="form.get('toAmount')" />
+            </mat-form-field>
+            {{ exchangeRate}}
+        </div>
     </div>
-    <div
-      class="form-row"
-      fxLayout="row"
-      fxLayoutAlign="center center"
-      fxLayoutGap="40px"
-      fxLayoutGap.xs="10px"
-    >
-      <mat-form-field appearance="outline" fxFlex="25" fxFlex.xs="48">
-        <mat-label>Enter an amount</mat-label>
-        <input
-          matInput
-          placeholder="Enter an amount"
-          type="number"
-          [formControl]="form.get('toCurrency')"
-          (ngModelChange)="changeAmount('to')"
-        />
-      </mat-form-field>
-      <mat-form-field appearance="outline" fxFlex="25" fxFlex.xs="48">
-        <mat-label>Enter an amount</mat-label>
-        <input
-          matInput
-          placeholder="Enter an amount"
-          type="number"
-          [formControl]="form.get('toCurrency')"
-          (ngModelChange)="changeAmount('to')"
-        />
-      </mat-form-field>
-    </div>
-  </div>
 </div>
