@@ -3,58 +3,68 @@
   <p class="page-title">Currency Converter</p>
   <span class="line"></span>
 
-  
-    <div class="form-container" fxLayout="column" fxLayoutAlign="center center">
-      <div
-        class="form-row"
-        fxLayout="row"
-        fxLayoutAlign="center center"
-        fxLayoutGap="40px"
-        fxLayoutGap.xs="10px"
-      >
-    
-        <mat-form-field appearance="outline" fxFlex="25" fxFlex.xs="48">
-          <mat-label>Enter an amount</mat-label>
-          <input
-            matInput
-            placeholder="Enter an amount"
-            type="tel"
-            (keypress)="this.checkFormat($event)"
-            [formControl]="form.get('fromCurrency')"
-            (ngModelChange)="changeAmount('from')"
-          />
-        </mat-form-field>
-        <mat-form-field appearance="outline" fxFlex="25" fxFlex.xs="48">
-          <mat-label>Base Currency</mat-label>
-          <mat-select
-            formControlName="fromCurrency"
-            (ngModelChange)="getConversionRate('from')"
-          >
-            <mat-option *ngFor="let currency of currencies" [value]="currency"
-              >{{ currency }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        
-
-        <!-- </div> -->
-        <!-- <div class="filter" fxLayout='row'fxLayoutAlign.xs='start center' fxLayoutAlign='center center' fxLayoutGap="30px" fxLayoutGap.xs="0"
-      fxLayoutAlign.xs='space-between center'>
-      <mat-form-field appearance="outline" fxFlex="30" fxFlex.xs="48">
-          <mat-label>Enter an amount</mat-label>
-          <input matInput placeholder="Enter an amount" type="tel" (keypress)="this.checkFormat($event)"
-              fxFlex="100" [formControl]="form.controls.fromCurrency"(ngModelChange)="changeAmount('to')" />
+  <div class="form-container" fxLayout="column" fxLayoutAlign="center center">
+    <div
+      class="form-row"
+      fxLayout="row"
+      fxLayoutAlign="center center"
+      fxLayoutGap="40px"
+      fxLayoutGap.xs="10px"
+    >
+      <mat-form-field appearance="outline" fxFlex="25" fxFlex.xs="48">
+        <mat-label>From:</mat-label>
+        <mat-select
+          [formControl]="form.get('fromCurrency')"
+          (ngModelChange)="getConversionRate('from')"
+        >
+          <mat-option
+            *ngFor="let currency of currencyList"
+            [value]="currency.id"
+            >{{ currency.description }}
+          </mat-option>
+        </mat-select>
       </mat-form-field>
-      <mat-form-field appearance="outline" fxFlex="30" fxFlex.xs="48">
-          <mat-label>Target Currency</mat-label>
-          <mat-select panelClass="select" fxFlex="100"  [formControl]="form.controls.fromCurrency"
-              (ngModelChange)="getConversionRate('to')">
-              <mat-option *ngFor="let currency of currencies" [value]="currency">{{currency}}
-              </mat-option>
-          </mat-select>
+      <mat-form-field appearance="outline" fxFlex="25" fxFlex.xs="48">
+        <mat-label>To:</mat-label>
+        <mat-select
+          [formControl]="form.get('toCurrency')"
+          (ngModelChange)="getConversionRate('from')"
+        >
+          <mat-option
+            *ngFor="let currency of currencyList"
+            [value]="currency.id"
+            >{{ currency.description }}
+          </mat-option>
+        </mat-select>
       </mat-form-field>
-  </div> -->
-      </div>
     </div>
-
+    <div
+      class="form-row"
+      fxLayout="row"
+      fxLayoutAlign="center center"
+      fxLayoutGap="40px"
+      fxLayoutGap.xs="10px"
+    >
+      <mat-form-field appearance="outline" fxFlex="25" fxFlex.xs="48">
+        <mat-label>Enter an amount</mat-label>
+        <input
+          matInput
+          placeholder="Enter an amount"
+          type="number"
+          [formControl]="form.get('toCurrency')"
+          (ngModelChange)="changeAmount('to')"
+        />
+      </mat-form-field>
+      <mat-form-field appearance="outline" fxFlex="25" fxFlex.xs="48">
+        <mat-label>Enter an amount</mat-label>
+        <input
+          matInput
+          placeholder="Enter an amount"
+          type="number"
+          [formControl]="form.get('toCurrency')"
+          (ngModelChange)="changeAmount('to')"
+        />
+      </mat-form-field>
+    </div>
+  </div>
 </div>
