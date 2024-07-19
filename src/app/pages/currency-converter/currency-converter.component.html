@@ -1,7 +1,6 @@
 <div class="page-container" fxLayout="column" fxLayoutAlign="start center">
     <!-- Title -->
     <p class="page-title">Currency Converter</p>
-    <span class="line"></span>
 
     <div class="form-container" fxLayout="column" fxLayoutAlign="center center">
         <div class="form-row" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="40px" fxLayoutGap.xs="10px">
@@ -23,7 +22,8 @@
         <div class="form-row" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="40px" fxLayoutGap.xs="10px">
             <mat-form-field appearance="outline" fxFlex="25" fxFlex.xs="48">
                 <mat-label>Enter an amount</mat-label>
-                <input matInput placeholder="Enter an amount" type="number" [formControl]="form.get('fromAmount')" />
+                <input matInput placeholder="Enter an amount" type="number" [formControl]="form.get('fromAmount')"
+                onchange="setTwoNumberDecimal(this)"  />
             </mat-form-field>
             <mat-form-field appearance="outline" fxFlex="25" fxFlex.xs="48">
                 <mat-label>Enter an amount</mat-label>

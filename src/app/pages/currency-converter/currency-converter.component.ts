@@ -37,7 +37,8 @@ export class CurrencyConverterComponent implements OnInit {
   form!: FormGroup;
   fetchingData?: boolean;
   currencyList: CurrencyModel[] | void = [];
-  regexStr = /[\d.]/;
+  regexStr = /[\d\.?(\.\d{1,2})]/;
+
   exchangeRate: number = 0;
 
   constructor(
@@ -56,13 +57,21 @@ export class CurrencyConverterComponent implements OnInit {
     this.form = this.formBuilder.group({
       fromCurrency: [''],
       toCurrency: [''],
-      fromAmount: [undefined],
-      toAmount: [undefined],
+      fromAmount: [0],
+      toAmount: [0],
     });
 
     this.manageAmount();
     //This triggers valuechanges for both amounts, so combineLatest will emit even if I change only 1 amount firstly
     this.form.patchValue({ fromAmount: undefined, toAmount: undefined });
+    // this.form.get('fromAmount')?.setValue(undefined);
+    // this.form.get('fromAmount')?.updateValueAndValidity();
+
+    // this.form.get('toAmount')?.setValue(undefined);
+    // this.form.get('toAmount')?.updateValueAndValidity();
+
+
+
   }
 
   getCurrencies() {
@@ -106,8 +115,16 @@ export class CurrencyConverterComponent implements OnInit {
                 }),
                 finalize(() => {
                   //This triggers the calculation of amounts if any input amounts have already been filled before the selection of currencies
-                  this.form.get('fromAmount')?.value ? this.form.get('fromAmount')?.value.updateValueAndValidity()
-                    : this.form.get('toAmount')?.updateValueAndValidity();
+                  // this.form.get('fromAmount')?.value ? this.form.get('fromAmount')?.setValue(this.form.get('fromAmount')?.value)s
+                  const from = this.form.get('fromAmount')?.value;
+                  const to = this.form.get('toAmount')?.value;
+                  if (from) {
+                    this.form.get('fromAmount')?.reset()
+                    this.form.get('fromAmount')?.setValue(from)
+                  } else if (to) {
+                    this.form.get('toAmount')?.reset()
+                    this.form.get('toAmount')?.setValue(to)
+                  }
                 })
               );
           })
@@ -131,13 +148,14 @@ export class CurrencyConverterComponent implements OnInit {
           tap((value) => {
             //if from amount has changed, set the value of to amount
             if (trigger === 'from') {
-              const toValue = value.fromAmount$ * this.exchangeRate;
+
+              const toValue = parseFloat((value.fromAmount$ * this.exchangeRate ).toFixed(2));
               this.form.get('toAmount')?.setValue(toValue ? toValue : undefined,
                 { emitEvent: false });
             } else {
               //if to amount has changed and there is an exhcange rate, set the value of from amount
               if (this.exchangeRate) {
-                const fromValue = (value.toAmount$ / this.exchangeRate).toFixed(2);
+                const fromValue = Math.round((value.toAmount$ / this.exchangeRate) * 100) / 100;
                 this.form.get('fromAmount')?.setValue(fromValue ? fromValue : undefined, {
                   emitEvent: false,
                 });
@@ -149,8 +167,14 @@ export class CurrencyConverterComponent implements OnInit {
     }
   }
 
-//This serves to remove any special characters from input fields
-  @HostListener('keypress', ['$event']) onKeyPress(event: KeyboardEvent) {
-    return new RegExp(this.regexStr).test(event.key);
-  }
+  //This serves to remove any special characters from input fields
+  // @HostListener('keypress', ['$event']) onKeyPress(event: KeyboardEvent) {
+  //   const a =  new RegExp(this.regexStr).test(event.key);
+  //  console.log(event?.target)
+  //  return a
+  // }
+  setTwoNumberDecimal(el:any) {
+ return   el.value = parseFloat(el.value).toFixed(2);
+};
+  
 }
