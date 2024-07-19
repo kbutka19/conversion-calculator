@@ -22,8 +22,8 @@
         <div class="form-row" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="40px" fxLayoutGap.xs="10px">
             <mat-form-field appearance="outline" fxFlex="25" fxFlex.xs="48">
                 <mat-label>Enter an amount</mat-label>
-                <input matInput placeholder="Enter an amount" type="number" [formControl]="form.get('fromAmount')"
-                onchange="setTwoNumberDecimal(this)"  />
+                <input matInput placeholder="Enter an amount" type="string" [formControl]="form.get('fromAmount')"
+                 />
             </mat-form-field>
             <mat-form-field appearance="outline" fxFlex="25" fxFlex.xs="48">
                 <mat-label>Enter an amount</mat-label>

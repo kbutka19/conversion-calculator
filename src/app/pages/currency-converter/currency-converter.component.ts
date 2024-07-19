@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -27,7 +27,7 @@ import { CurrencyConverterService } from '../../services/currency-converter.serv
     MatSelectModule,
     CommonModule,
     ReactiveFormsModule,
-    MatFormFieldModule,
+    MatFormFieldModule
   ],
   templateUrl: './currency-converter.component.html',
   styleUrl: './currency-converter.component.scss',
@@ -44,7 +44,8 @@ export class CurrencyConverterComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private currecyConverterService: CurrencyConverterService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private el: ElementRef
   ) { }
 
   ngOnInit(): void {
@@ -149,7 +150,7 @@ export class CurrencyConverterComponent implements OnInit {
             //if from amount has changed, set the value of to amount
             if (trigger === 'from') {
 
-              const toValue = parseFloat((value.fromAmount$ * this.exchangeRate ).toFixed(2));
+              const toValue = parseFloat((value.fromAmount$ * this.exchangeRate).toFixed(2));
               this.form.get('toAmount')?.setValue(toValue ? toValue : undefined,
                 { emitEvent: false });
             } else {
@@ -168,13 +169,14 @@ export class CurrencyConverterComponent implements OnInit {
   }
 
   //This serves to remove any special characters from input fields
-  // @HostListener('keypress', ['$event']) onKeyPress(event: KeyboardEvent) {
-  //   const a =  new RegExp(this.regexStr).test(event.key);
-  //  console.log(event?.target)
-  //  return a
-  // }
-  setTwoNumberDecimal(el:any) {
- return   el.value = parseFloat(el.value).toFixed(2);
-};
-  
+  @HostListener('keypress', ['$event']) onKeyPress(event: KeyboardEvent) {
+    const a =  new RegExp(this.regexStr).test(event.key);
+    this.el.nativeElement.value
+   console.log(  this.el.nativeElement)
+   return a
+  }
+  setTwoNumberDecimal(el: any) {
+    return el.value = parseFloat(el.value).toFixed(2);
+  };
+
 }
