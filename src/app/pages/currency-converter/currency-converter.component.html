@@ -1,20 +1,23 @@
-<div class="page-container" fxLayout="column" fxLayoutAlign="start center">
-    <!-- Title -->
-    <p class="page-title">Currency Converter</p>
-
-    <div class="form-container" fxLayout="column" fxLayoutAlign="center center">
+<div class="page-container">
+    <div class="page-title" fxLayout="column" fxLayoutAlign="start center">Currency Converter
+        <mat-spinner *ngIf="loadingPage"></mat-spinner>
+    </div>
+    <!-- Form -->
+    <div *ngIf="!loadingPage" class="form-container" fxLayout="column" fxLayoutAlign="center center">
         <div class="form-row" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="40px" fxLayoutGap.xs="10px">
             <mat-form-field appearance="outline" fxFlex="25" fxFlex.xs="48">
                 <mat-label>From:</mat-label>
                 <mat-select [formControl]="form.get('fromCurrency')">
-                    <mat-option *ngFor="let currency of currencyList" [value]="currency.id">{{ currency.description }}
+                    <mat-option *ngFor="let currency of currencyList" [value]="currency.id">{{ currency.description
+                        }}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
             <mat-form-field appearance="outline" fxFlex="25" fxFlex.xs="48">
                 <mat-label>To:</mat-label>
                 <mat-select [formControl]="form.get('toCurrency')">
-                    <mat-option *ngFor="let currency of currencyList" [value]="currency.id">{{ currency.description }}
+                    <mat-option *ngFor="let currency of currencyList" [value]="currency.id">{{ currency.description
+                        }}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
@@ -27,10 +30,62 @@
             </mat-form-field>
             <mat-form-field appearance="outline" fxFlex="25" fxFlex.xs="48">
                 <mat-label>Enter an amount</mat-label>
-                <input matInput placeholder="Enter an amount" type="number" [formControl]="form.get('toAmount')"
+                <input matInput placeholder="Enter an amount" type="string" [formControl]="form.get('toAmount')"
                     appFormatCurrency />
             </mat-form-field>
-
         </div>
+        <div class="form-row" fxLayout="row" fxLayoutAlign="center center">
+            <button [ngStyle]="{'margin-bottom':'30px'}" mat-mini-fab aria-label="Swap Button"
+                (click)="swapCurrencies()">
+                <mat-icon>swap_horiz</mat-icon>
+            </button>
+        </div>
+    </div>
+
+    <!-- Result Message -->
+    <div *ngIf="resultMsg" class="result-message">
+        <div fxLayout="row" fxLayoutAlign="center start" fxLayoutAlign.xs="start start">Result:</div>
+        <div fxLayout="row" fxLayoutAlign="center start" fxLayoutAlign.xs="start start">
+            {{ form.get('fromAmount').value | currency: form.get('fromCurrency').value }} =
+            &nbsp; <b>{{ form.get('toAmount').value | currency: form.get('toCurrency').value }}</b>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="center start" fxLayoutAlign.xs="start start">
+            {{ form.get('fromAmount').value + ' ' + form.get('fromCurrency').value }} =
+            &nbsp; <b>{{ form.get('toAmount').value + ' ' + form.get('toCurrency').value }}</b>
+        </div>
+    </div>
+
+    <div *ngIf="!loadingPage" class="form-container" fxLayout="column" fxLayoutAlign="center start">
+        <div class="form-row" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="40px" fxLayoutGap.xs="10px">
+            <mat-form-field appearance="outline" fxFlex="23" fxFlex.xs="40">
+                <mat-label>From Date</mat-label>
+                <input matInput [matDatepicker]="picker1" [formControl]="form.get('fromDate')">
+                <mat-hint>MM/DD/YYYY</mat-hint>
+                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker touchUi #picker1></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field appearance="outline" fxFlex="23" fxFlex.xs="40">
+                <mat-label>To Date</mat-label>
+                <input matInput [matDatepicker]="picker2" [formControl]="form.get('toDate')">
+                <mat-hint>MM/DD/YYYY</mat-hint>
+                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                <mat-datepicker touchUi #picker2></mat-datepicker>
+                <mat-error></mat-error>
+            </mat-form-field>
+
+            <button class="reset-button" mat-mini-fab aria-label="History Button" (click)="getConversionHistory()"
+                [disabled]="disableHistoryBtn">
+                <mat-icon>history</mat-icon>
+            </button>
+        </div>
+        <div class="form-row" fxLayout="row" fxLayoutAlign="center center">
+            <button class="reset-button" mat-button aria-label="Reset Button" (click)="reset()">
+                Reset All
+            </button>
+        </div>
+    </div>
+
+    <div fxLayout='row' [ngStyle.xs]="{'width': '100%'}" [ngStyle]="{'width': '100%'}" fxLayoutAlign="center center">
+        <canvasjs-chart *ngIf="showChart" [options]="chartOptions" [ngStyle]="{'width': '80%'}"></canvasjs-chart>
     </div>
 </div>

@@ -4,27 +4,38 @@ import { map, Observable } from 'rxjs';
 import { CurrencyModel } from '../models/currency.model';
 import { CurrencyDTO } from '../dtos/currencyDTO';
 import { RateDTO, RatesObjectDTO } from '../dtos/rateDTO';
+import { HistoricalRateDTO, HistoricalRatesObjectDTO } from '../dtos/historicalRateDTO';
 
 
 @Injectable({
   providedIn: 'root',
 })
 export class CurrencyConverterService {
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient) { }
 
   getListOfCurrencies(): Observable<CurrencyModel[] | void> {
-    const host = 'api.frankfurter.app';
-
     return this.httpClient
       .get<CurrencyDTO>('https://api.frankfurter.app/currencies')
       .pipe(map((res: CurrencyDTO) => this.convertToCurrencyModel(res)));
   }
 
-  getExchangeRate(from: string, to: string):Observable<RatesObjectDTO> {
+  getExchangeRate(from: string, to: string): Observable<RatesObjectDTO> {
     return this.httpClient
       .get<RateDTO>(`https://api.frankfurter.app/latest?from=${from}&to=${to}`)
-      .pipe(map((res:RateDTO) => res.rates));
+      .pipe(map((res: RateDTO) => res.rates));
   }
+
+  getHistoricalValues(
+    fromCurrency: string,
+    toCurrency: string,
+    fromDate: string,
+    toDate: string
+  ): Observable<HistoricalRatesObjectDTO> {
+    return this.httpClient
+      .get<HistoricalRateDTO>(`https://api.frankfurter.app/${fromDate}..${toDate}?from=${fromCurrency}&to=${toCurrency}`)
+      .pipe(map((res: HistoricalRateDTO) => res.rates));
+  }
+
 
   convertToCurrencyModel(currencies: CurrencyDTO) {
     const resultData: CurrencyModel[] = [];

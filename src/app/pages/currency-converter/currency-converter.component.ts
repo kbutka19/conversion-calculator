@@ -1,11 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
 import { combineLatest, of, throwError } from 'rxjs';
 import {
   catchError,
@@ -15,9 +20,11 @@ import {
   switchMap,
   tap,
 } from 'rxjs/operators';
+import { FormatCurrencyDirective } from '../../directives/format-currency.directive';
+import { HistoricalRatesObjectDTO } from '../../dtos/historicalRateDTO';
 import { CurrencyModel } from '../../models/currency.model';
 import { CurrencyConverterService } from '../../services/currency-converter.service';
-import { FormatCurrencyDirective } from '../../directives/format-currency.directive';
+
 
 @Component({
   selector: 'app-currency-converter',
@@ -29,25 +36,31 @@ import { FormatCurrencyDirective } from '../../directives/format-currency.direct
     CommonModule,
     ReactiveFormsModule,
     MatFormFieldModule,
-    FormatCurrencyDirective
+    FormatCurrencyDirective,
+    MatIcon,
+    MatButtonModule,
+    MatProgressSpinnerModule,
+    MatDatepickerModule,
+    CanvasJSAngularChartsModule
   ],
   templateUrl: './currency-converter.component.html',
   styleUrl: './currency-converter.component.scss',
 })
 export class CurrencyConverterComponent implements OnInit {
-  baseCurrency = '';
   form!: FormGroup;
-  fetchingData?: boolean;
+  loadingPage?: boolean;
   currencyList: CurrencyModel[] | void = [];
-  regexStr = /[\d\.?(\.\d{1,2})]/;
-
+  resultMsg1!: string | undefined;
+  resultMsg2!: string | undefined;
+  resultMsg: boolean = false
   exchangeRate: number = 0;
+  chartOptions: any;
+  showChart: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
     private currecyConverterService: CurrencyConverterService,
-    private snackBar: MatSnackBar,
-    private el: ElementRef
+    private snackBar: MatSnackBar
   ) { }
 
   ngOnInit(): void {
@@ -62,6 +75,8 @@ export class CurrencyConverterComponent implements OnInit {
       toCurrency: [''],
       fromAmount: [0],
       toAmount: [0],
+      fromDate: [{ value: undefined, disabled: true }],
+      toDate: [{ value: undefined, disabled: true }]
     });
 
     this.manageAmount();
@@ -70,14 +85,13 @@ export class CurrencyConverterComponent implements OnInit {
   }
 
   getCurrencies() {
+    this.loadingPage = true;
     this.currecyConverterService
       .getListOfCurrencies()
       .pipe(
-        tap((res) => {
-          this.currencyList = res;
-        })
-      )
-      .subscribe();
+        tap((res) => this.currencyList = res),
+        finalize(() => this.loadingPage = false)
+      ).subscribe();
   }
 
   getExchangeRate() {
@@ -93,10 +107,13 @@ export class CurrencyConverterComponent implements OnInit {
           distinctUntilChanged(),
           filter((value) => !!(value.fromCurrency$ && value.toCurrency$)),
           switchMap((value) => {
+            this.form.get('fromDate')?.enable();
+            this.form.get('toDate')?.enable();
             //If currencys are the same the exchange rate is 1
             //Otherwise I call the service to get the exchange rate
             if (value.fromCurrency$ === value.toCurrency$) {
               this.exchangeRate = 1;
+              this.calculateAmounts();
               return of(1);
             }
             return this.currecyConverterService
@@ -109,22 +126,25 @@ export class CurrencyConverterComponent implements OnInit {
                   return throwError(() => err);
                 }),
                 finalize(() => {
-                  //This triggers the calculation of amounts if any input amounts have already been filled before the selection of currencies
-                  // this.form.get('fromAmount')?.value ? this.form.get('fromAmount')?.setValue(this.form.get('fromAmount')?.value)s
-                  const from = this.form.get('fromAmount')?.value;
-                  const to = this.form.get('toAmount')?.value;
-                  if (from) {
-                    this.form.get('fromAmount')?.reset()
-                    this.form.get('fromAmount')?.setValue(from)
-                  } else if (to) {
-                    this.form.get('toAmount')?.reset()
-                    this.form.get('toAmount')?.setValue(to)
-                  }
+                  this.calculateAmounts()
                 })
               );
           })
-        )
-        .subscribe();
+        ).subscribe();
+    }
+  }
+
+  //This triggers the calculation of amounts if any input amounts have already been filled before the selection of currencies
+  // this.form.get('fromAmount')?.value ? this.form.get('fromAmount')?.setValue(this.form.get('fromAmount')?.value)s
+  calculateAmounts() {
+    const from = this.form.get('fromAmount')?.value;
+    const to = this.form.get('toAmount')?.value;
+    if (from) {
+      this.form.get('fromAmount')?.reset()
+      this.form.get('fromAmount')?.setValue(from)
+    } else if (to) {
+      this.form.get('toAmount')?.reset()
+      this.form.get('toAmount')?.setValue(to)
     }
   }
 
@@ -155,19 +175,81 @@ export class CurrencyConverterComponent implements OnInit {
                 });
               }
             }
+            //This is used to display the message in the screen
+            const formData = this.form.getRawValue();
+            formData.fromCurrency && formData.toCurrency && formData.fromAmount && formData.toAmount ?
+              this.resultMsg = true : this.resultMsg = false;
           })
         )
         .subscribe();
     }
   }
 
-  // //This serves to remove any special characters from input fields
-  // @HostListener('keypress', ['$event']) onKeyPress(event: KeyboardEvent) {
-  //   const a =  new RegExp(this.regexStr).test(event.key);
-  //   this.el.nativeElement.value
-  //  console.log(  this.el.nativeElement)
-  //  return a
-  // }
+  swapCurrencies() {
+    const from = this.form.get('fromCurrency')?.value;
+    const to = this.form.get('toCurrency')?.value;
+    this.form.get('fromCurrency')?.setValue(to);
+    this.form.get('toCurrency')?.setValue(from);
+  }
 
+  reset() {
+    this.form.reset();
+    this.form.get('fromDate')?.disable();
+    this.form.get('toDate')?.disable();
+    this.exchangeRate = 0;
+    this.showChart = false;
+  }
 
+  getConversionHistory() {
+    const fromDate = this.convertDate(this.form.get('fromDate')?.value);
+    const toDate = this.convertDate(this.form.get('toDate')?.value);
+    const fromCurrency = this.form.get('fromCurrency')?.value;
+    const toCurrency = this.form.get('toCurrency')?.value;
+    this.currecyConverterService.getHistoricalValues(fromCurrency, toCurrency, fromDate, toDate).
+      pipe(tap(res => {
+        this.createChart(fromCurrency, toCurrency, res);
+        this.showChart = true;
+      }),
+        catchError((err) => {
+          this.showChart = false;
+          this.snackBar.open(`Historical values between ${fromCurrency} and ${toCurrency} not found`, 'Close');
+          return throwError(() => err);
+        }),).subscribe()
+  }
+
+  get disableHistoryBtn() {
+    return !(this.form.get('fromDate')?.value && this.form.get('fromDate')?.valid &&
+      this.form.get('toDate')?.value && this.form.get('toDate')?.valid)
+  }
+
+  convertDate(date: Date) {
+    const utcDate = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes()))
+    const result = JSON.stringify(utcDate)
+    return result.slice(1, 11)
+  }
+
+  createChart(fromCurrency: string, toCurrency: string, rates: HistoricalRatesObjectDTO) {
+    const dataPoints: any[] = [];
+    Object.keys(rates).forEach(key => {
+        dataPoints.push({
+          x: new Date(key),
+          y: rates[key][toCurrency]
+        })
+    })
+
+    this.chartOptions = {
+      theme: "light2",
+      animationEnabled: true,
+      zoomEnabled: true,
+      title: {
+        text: `Historical rates between ${fromCurrency} and ${toCurrency}`
+      },
+      data: [{
+        type: "line",
+        xValueFormatString: "DD-MM-YYYY",
+        yValueFormatString: "$#,###.##",
+        dataPoints: dataPoints
+      }]
+    }
+  }
 }

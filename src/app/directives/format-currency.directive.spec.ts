@@ -23,11 +23,4 @@ describe('FormatCurrencyDirective', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
-
-  // it('should create an instance', () => {
-  //   let el: ElementRef;
-  //   const directive = new FormatCurrencyDirective(el);
-  //   expect(directive).toBeTruthy();
-  // });
 });
