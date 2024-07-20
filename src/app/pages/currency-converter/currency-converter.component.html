@@ -23,13 +23,14 @@
             <mat-form-field appearance="outline" fxFlex="25" fxFlex.xs="48">
                 <mat-label>Enter an amount</mat-label>
                 <input matInput placeholder="Enter an amount" type="string" [formControl]="form.get('fromAmount')"
-                 />
+                    appFormatCurrency />
             </mat-form-field>
             <mat-form-field appearance="outline" fxFlex="25" fxFlex.xs="48">
                 <mat-label>Enter an amount</mat-label>
-                <input matInput placeholder="Enter an amount" type="number" [formControl]="form.get('toAmount')" />
+                <input matInput placeholder="Enter an amount" type="number" [formControl]="form.get('toAmount')"
+                    appFormatCurrency />
             </mat-form-field>
-            {{ exchangeRate}}
+
         </div>
     </div>
 </div>

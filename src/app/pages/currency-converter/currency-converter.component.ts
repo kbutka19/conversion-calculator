@@ -17,6 +17,7 @@ import {
 } from 'rxjs/operators';
 import { CurrencyModel } from '../../models/currency.model';
 import { CurrencyConverterService } from '../../services/currency-converter.service';
+import { FormatCurrencyDirective } from '../../directives/format-currency.directive';
 
 @Component({
   selector: 'app-currency-converter',
@@ -27,7 +28,8 @@ import { CurrencyConverterService } from '../../services/currency-converter.serv
     MatSelectModule,
     CommonModule,
     ReactiveFormsModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    FormatCurrencyDirective
   ],
   templateUrl: './currency-converter.component.html',
   styleUrl: './currency-converter.component.scss',
@@ -65,14 +67,6 @@ export class CurrencyConverterComponent implements OnInit {
     this.manageAmount();
     //This triggers valuechanges for both amounts, so combineLatest will emit even if I change only 1 amount firstly
     this.form.patchValue({ fromAmount: undefined, toAmount: undefined });
-    // this.form.get('fromAmount')?.setValue(undefined);
-    // this.form.get('fromAmount')?.updateValueAndValidity();
-
-    // this.form.get('toAmount')?.setValue(undefined);
-    // this.form.get('toAmount')?.updateValueAndValidity();
-
-
-
   }
 
   getCurrencies() {
@@ -149,14 +143,13 @@ export class CurrencyConverterComponent implements OnInit {
           tap((value) => {
             //if from amount has changed, set the value of to amount
             if (trigger === 'from') {
-
               const toValue = parseFloat((value.fromAmount$ * this.exchangeRate).toFixed(2));
               this.form.get('toAmount')?.setValue(toValue ? toValue : undefined,
                 { emitEvent: false });
             } else {
               //if to amount has changed and there is an exhcange rate, set the value of from amount
               if (this.exchangeRate) {
-                const fromValue = Math.round((value.toAmount$ / this.exchangeRate) * 100) / 100;
+                const fromValue = parseFloat((value.toAmount$ / this.exchangeRate).toFixed(2));
                 this.form.get('fromAmount')?.setValue(fromValue ? fromValue : undefined, {
                   emitEvent: false,
                 });
@@ -168,15 +161,13 @@ export class CurrencyConverterComponent implements OnInit {
     }
   }
 
-  //This serves to remove any special characters from input fields
-  @HostListener('keypress', ['$event']) onKeyPress(event: KeyboardEvent) {
-    const a =  new RegExp(this.regexStr).test(event.key);
-    this.el.nativeElement.value
-   console.log(  this.el.nativeElement)
-   return a
-  }
-  setTwoNumberDecimal(el: any) {
-    return el.value = parseFloat(el.value).toFixed(2);
-  };
+  // //This serves to remove any special characters from input fields
+  // @HostListener('keypress', ['$event']) onKeyPress(event: KeyboardEvent) {
+  //   const a =  new RegExp(this.regexStr).test(event.key);
+  //   this.el.nativeElement.value
+  //  console.log(  this.el.nativeElement)
+  //  return a
+  // }
+
 
 }
