@@ -9,7 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { combineLatest, distinctUntilChanged, filter, tap } from 'rxjs';
-import { LENGTH_UNITS } from '../../models/length-units';
+import { LENGTH_UNITS } from '../../constants/length-units';
 
 @Component({
   selector: 'app-length-converter',
@@ -134,8 +134,12 @@ export class LengthConverterComponent implements OnInit {
   swapLengths() {
     const from = this.form.get('fromLength')?.value;
     const to = this.form.get('toLength')?.value;
+    this.form.get('fromLength')?.reset();
+    this.form.get('toLength')?.reset();
     this.form.get('fromLength')?.setValue(to);
     this.form.get('toLength')?.setValue(from);
+    this.fromLength = to;
+    this.toLength = from;
   }
 
   reset() {

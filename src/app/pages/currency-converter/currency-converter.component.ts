@@ -107,6 +107,7 @@ export class CurrencyConverterComponent implements OnInit {
           switchMap((value) => {
             this.form.get('fromDate')?.enable();
             this.form.get('toDate')?.enable();
+            console.log('is in')
             //If currencys are the same the exchange rate is 1
             //Otherwise I call the service to get the exchange rate
             if (value.fromCurrency$ === value.toCurrency$) {
@@ -186,6 +187,8 @@ export class CurrencyConverterComponent implements OnInit {
   swapCurrencies() {
     const from = this.form.get('fromCurrency')?.value;
     const to = this.form.get('toCurrency')?.value;
+    this.form.get('fromCurrency')?.reset();
+    this.form.get('toCurrency')?.reset();
     this.form.get('fromCurrency')?.setValue(to);
     this.form.get('toCurrency')?.setValue(from);
   }
