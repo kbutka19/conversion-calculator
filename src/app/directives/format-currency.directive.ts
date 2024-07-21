@@ -8,8 +8,8 @@ export class FormatCurrencyDirective {
   private specialKeys: Array<string> = ['Backspace', 'Del', 'Delete'];
   constructor(private el: ElementRef) {
   }
-  @HostListener('keydown', ['$event'])
-  onKeyDown(event: KeyboardEvent) {
+  @HostListener('input', ['$event'])
+  onKeyDown(event: any) {
     // Allow Backspace, tab, end, and home keys
     if (this.specialKeys.indexOf(event.key) !== -1) {
       return;
@@ -17,22 +17,24 @@ export class FormatCurrencyDirective {
     let current: string = this.el.nativeElement.value;
     const startPosition = this.el.nativeElement.selectionStart;
     const next: string = [current.slice(0, startPosition), event.key == 'Decimal' ? '.' : event.key, current.slice(startPosition)].join('');
+    console.log(next)
     if (next && !String(next).match(this.regex)) {
-      event.preventDefault();
+      this.el.nativeElement.value = next.slice(0, -1)
     }
   }
 
-  @HostListener('input', ['$event'])
-    public onInput(event:any) {
-      let val: string = this.el.nativeElement.value;
-      const position = this.el.nativeElement.selectionStart;
-      if(event.data == '.' && val.split('.').length > 2){
-        this.el.nativeElement.value = val.slice(0, position-1);
-      }
-      //This will add default decimal if not entered manually
-      console.log(val)
-      if (val.length == 9 && !val.includes('.')) {
-        this.el.nativeElement.value = val + '.';
-      }
-    }
+  // @HostListener('input', ['$event'])
+  //   public onInput(event:any) {
+    
+  //     let val: string = this.el.nativeElement.value;
+  //     const position = this.el.nativeElement.selectionStart;
+  //     if(event.data == '.' && val.split('.').length > 2){
+  //       this.el.nativeElement.value = val.slice(0, position-1);
+  //     }
+  //     console.log(val)
+  //     //This will add default decimal if not entered manually
+  //     if (val.length == 9 && !val.includes('.')) {
+  //       this.el.nativeElement.value = val + '.';
+  //     }
+  //   }
 }
