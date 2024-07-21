@@ -16,7 +16,7 @@ export const appConfig: ApplicationConfig = {
     BrowserAnimationsModule,
     importProvidersFrom(MatNativeDateModule),
     provideServiceWorker('ngsw-worker.js', {
-      enabled: !isDevMode(),
+      enabled: true,
       registrationStrategy: 'registerWhenStable:30000',
     }),
   ],

@@ -6,7 +6,6 @@ import { CurrencyDTO } from '../dtos/currencyDTO';
 import { RateDTO, RatesObjectDTO } from '../dtos/rateDTO';
 import { HistoricalRateDTO, HistoricalRatesObjectDTO } from '../dtos/historicalRateDTO';
 
-
 @Injectable({
   providedIn: 'root',
 })

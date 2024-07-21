@@ -17,5 +17,13 @@ export const routes: Routes = [
         )
       ).CurrencyConverterComponent,
   },
-  
+  {
+    path: 'length-converter',
+    loadComponent: async () =>
+      (
+        await import(
+          './pages/length-converter/length-converter.component'
+        )
+      ).LengthConverterComponent,
+  },
 ];
