@@ -13,7 +13,7 @@ describe('FormatCurrencyDirective', () => {
   let inputEl: any;
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      imports: [CurrencyConverterComponent, FormatCurrencyDirective, HttpClientModule, MatDatepickerModule, MatNativeDateModule, BrowserAnimationsModule]
+      imports: [CurrencyConverterComponent, FormatCurrencyDirective, HttpClientModule, MatNativeDateModule, BrowserAnimationsModule]
     });
 
     fixture = TestBed.createComponent(CurrencyConverterComponent);

@@ -1,12 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterModule } from '@angular/router';
+import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
 import { CurrencyConverterComponent } from './pages/currency-converter/currency-converter.component';
 import { LengthConverterComponent } from './pages/length-converter/length-converter.component';
-import { RouterModule } from '@angular/router';
-import { By } from '@angular/platform-browser';
-import { HeaderComponent } from './components/header/header.component';
 
 const Routes = [
   {
@@ -29,7 +27,7 @@ describe('AppComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AppComponent, BrowserAnimationsModule,RouterModule.forRoot(Routes)],
+      imports: [AppComponent, BrowserAnimationsModule, RouterModule.forRoot(Routes)],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AppComponent);
