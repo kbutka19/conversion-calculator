@@ -27,10 +27,10 @@ export class FormatCurrencyDirective {
       let val: string = this.el.nativeElement.value;
       const position = this.el.nativeElement.selectionStart;
       if(event.data == '.' && val.split('.').length > 2){
-        //This restricts the additional decimal.
         this.el.nativeElement.value = val.slice(0, position-1);
       }
       //This will add default decimal if not entered manually
+      console.log(val)
       if (val.length == 9 && !val.includes('.')) {
         this.el.nativeElement.value = val + '.';
       }

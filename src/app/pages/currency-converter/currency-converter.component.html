@@ -57,14 +57,14 @@
 
     <div *ngIf="!loadingPage" class="form-container" fxLayout="column" fxLayoutAlign="center start">
         <div class="form-row" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="40px" fxLayoutGap.xs="10px">
-            <mat-form-field appearance="outline" fxFlex="23" fxFlex.xs="40">
+            <mat-form-field appearance="outline" fxFlex="23" fxFlex.xs="43">
                 <mat-label>From Date</mat-label>
                 <input matInput [matDatepicker]="picker1" [formControl]="form.get('fromDate')">
                 <mat-hint>MM/DD/YYYY</mat-hint>
                 <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                 <mat-datepicker touchUi #picker1></mat-datepicker>
             </mat-form-field>
-            <mat-form-field appearance="outline" fxFlex="23" fxFlex.xs="40">
+            <mat-form-field appearance="outline" fxFlex="23" fxFlex.xs="43">
                 <mat-label>To Date</mat-label>
                 <input matInput [matDatepicker]="picker2" [formControl]="form.get('toDate')">
                 <mat-hint>MM/DD/YYYY</mat-hint>
