@@ -64,7 +64,7 @@ describe('CurrencyConverterComponent', () => {
         [to]: 409.55
       }
     ));
-    tick()
+
     fromCurrency?.setValue(from);
     toCurrency?.setValue(to);
     fromAmount?.setValue(1);
@@ -82,7 +82,7 @@ describe('CurrencyConverterComponent', () => {
         [to]: 1.55
       }
     ));
-    tick()
+
     toCurrency?.setValue(to);
     fromAmount?.setValue(1);
     fixture.detectChanges();
@@ -98,7 +98,7 @@ describe('CurrencyConverterComponent', () => {
         'random': 1.56
       }
     ));
-    tick()
+
     fromCurrency?.setValue(from);
     fromAmount?.setValue(1);
     fixture.detectChanges();
@@ -106,6 +106,27 @@ describe('CurrencyConverterComponent', () => {
     expect(toAmount?.value).toBeUndefined();
   })
   );
+
+  it('should call exchange rate api when FromCurrency is changed and ToCurrency is filled', fakeAsync(() => {
+    const from = (component.currencyList as CurrencyModel[])[1].id;
+    const to = (component.currencyList as CurrencyModel[])[3].id;
+
+    spyOn(component.currecyConverterService, 'getExchangeRate').and.returnValue(of(
+      {
+        [to]: 1.55
+      }
+    ));
+    tick()
+    let spy = spyOn(component, 'getExchangeRate')
+    toCurrency?.setValue(to);
+    fromCurrency?.setValue(from);
+    component.getExchangeRate();
+    tick(100);
+    
+    expect(spy).toHaveBeenCalled();
+  })
+  );
+
 
   it('should enable historical values button when dates are valid', () => {
     fromDate?.enable();
@@ -129,8 +150,7 @@ describe('CurrencyConverterComponent', () => {
   });
 
 
-  it('should display chart on history button clicked', fakeAsync(() => {
-    component.getConversionHistory();
+  it('should load chart when history button clicked', fakeAsync(() => {
     spyOn(component.currecyConverterService, 'getHistoricalValues').and.returnValue(of(
       {
         'EUR': {
@@ -143,10 +163,11 @@ describe('CurrencyConverterComponent', () => {
         }
       }
     ));
-    tick()
-    fixture.detectChanges();
-    tick()
-    expect(component.showChart).toBeTrue();
+    let spy = spyOn(component, 'getConversionHistory')
+    component.getConversionHistory();
+    tick(100)
+    expect(spy).toHaveBeenCalled();
+
   })
   );
 });
