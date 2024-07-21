@@ -85,7 +85,7 @@
         </div>
     </div>
 
-    <div fxLayout='row' [ngStyle.xs]="{'width': '100%'}" [ngStyle]="{'width': '100%'}" fxLayoutAlign="center center">
-        <canvasjs-chart *ngIf="showChart" [options]="chartOptions" [ngStyle]="{'width': '80%'}"></canvasjs-chart>
+    <div fxLayout='row' *ngIf="showChart" [ngStyle.xs]="{'width': '100%'}" [ngStyle]="{'width': '100%'}" fxLayoutAlign="center center">
+        <canvasjs-chart [options]="chartOptions" [ngStyle]="{'width': '90%'}"></canvasjs-chart>
     </div>
 </div>

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -50,8 +50,6 @@ export class CurrencyConverterComponent implements OnInit {
   form!: FormGroup;
   loadingPage?: boolean;
   currencyList: CurrencyModel[] | void = [];
-  resultMsg1!: string | undefined;
-  resultMsg2!: string | undefined;
   resultMsg: boolean = false
   exchangeRate: number = 0;
   chartOptions: any;
@@ -79,7 +77,7 @@ export class CurrencyConverterComponent implements OnInit {
       toDate: [{ value: undefined, disabled: true }]
     });
 
-    this.manageAmount();
+    this.calculateAmounts();
     //This triggers valuechanges for both amounts, so combineLatest will emit even if I change only 1 amount firstly
     this.form.patchValue({ fromAmount: undefined, toAmount: undefined });
   }
@@ -113,7 +111,7 @@ export class CurrencyConverterComponent implements OnInit {
             //Otherwise I call the service to get the exchange rate
             if (value.fromCurrency$ === value.toCurrency$) {
               this.exchangeRate = 1;
-              this.calculateAmounts();
+              this.manageAmounts();
               return of(1);
             }
             return this.currecyConverterService
@@ -126,7 +124,7 @@ export class CurrencyConverterComponent implements OnInit {
                   return throwError(() => err);
                 }),
                 finalize(() => {
-                  this.calculateAmounts()
+                  this.manageAmounts()
                 })
               );
           })
@@ -134,9 +132,9 @@ export class CurrencyConverterComponent implements OnInit {
     }
   }
 
-  //This triggers the calculation of amounts if any input amounts have already been filled before the selection of currencies
-  // this.form.get('fromAmount')?.value ? this.form.get('fromAmount')?.setValue(this.form.get('fromAmount')?.value)s
-  calculateAmounts() {
+  //This triggers the calculation of amounts if any input amounts have already been filled
+  //From amount has priority when both amounts are filled
+  manageAmounts() {
     const from = this.form.get('fromAmount')?.value;
     const to = this.form.get('toAmount')?.value;
     if (from) {
@@ -148,16 +146,16 @@ export class CurrencyConverterComponent implements OnInit {
     }
   }
 
-  manageAmount() {
+  calculateAmounts() {
     let trigger = '';
     const fromAmount$ = this.form?.get('fromAmount')?.valueChanges.pipe(tap(() => (trigger = 'from')));
     const toAmount$ = this.form?.get('toAmount')?.valueChanges.pipe(tap(() => (trigger = 'to')));
     if (fromAmount$ && toAmount$) {
-      const combinedCurrencys = combineLatest({
+      const combinedAmounts = combineLatest({
         fromAmount$,
         toAmount$,
       });
-      combinedCurrencys
+      combinedAmounts
         .pipe(
           distinctUntilChanged(),
           tap((value) => {
@@ -231,10 +229,10 @@ export class CurrencyConverterComponent implements OnInit {
   createChart(fromCurrency: string, toCurrency: string, rates: HistoricalRatesObjectDTO) {
     const dataPoints: any[] = [];
     Object.keys(rates).forEach(key => {
-        dataPoints.push({
-          x: new Date(key),
-          y: rates[key][toCurrency]
-        })
+      dataPoints.push({
+        x: new Date(key),
+        y: rates[key][toCurrency]
+      })
     })
 
     this.chartOptions = {
@@ -252,4 +250,5 @@ export class CurrencyConverterComponent implements OnInit {
       }]
     }
   }
+
 }
