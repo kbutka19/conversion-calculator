@@ -20,4 +20,5 @@ describe('CurrencyConverterComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
 });

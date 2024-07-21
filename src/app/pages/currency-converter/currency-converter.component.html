@@ -1,3 +1,4 @@
+
 <div class="page-container">
     <div class="page-title" fxLayout="column" fxLayoutAlign="start center">Currency Converter
         <mat-spinner *ngIf="loadingPage"></mat-spinner>
@@ -55,6 +56,12 @@
         </div>
     </div>
 
+    <div *ngIf="!loadingPage" class="form-row" fxLayout="row" fxLayoutAlign="center center">
+        <button class="reset-button" mat-button aria-label="Reset Button" (click)="reset()">
+            Reset All
+        </button>
+    </div>
+
     <div *ngIf="!loadingPage" class="form-container" fxLayout="column" fxLayoutAlign="center start">
         <div class="form-row" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="40px" fxLayoutGap.xs="10px">
             <mat-form-field appearance="outline" fxFlex="23" fxFlex.xs="43">
@@ -76,11 +83,6 @@
             <button class="reset-button" mat-mini-fab aria-label="History Button" (click)="getConversionHistory()"
                 [disabled]="disableHistoryBtn">
                 <mat-icon>history</mat-icon>
-            </button>
-        </div>
-        <div class="form-row" fxLayout="row" fxLayoutAlign="center center">
-            <button class="reset-button" mat-button aria-label="Reset Button" (click)="reset()">
-                Reset All
             </button>
         </div>
     </div>

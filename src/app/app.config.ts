@@ -6,14 +6,15 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { provideServiceWorker } from '@angular/service-worker';
 import { provideHttpClient } from '@angular/common/http';
 import { MatNativeDateModule } from '@angular/material/core';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
     provideAnimationsAsync(),
     provideHttpClient(),
-    BrowserAnimationsModule,
+    provideAnimations(),
+    importProvidersFrom([BrowserAnimationsModule]),
     importProvidersFrom(MatNativeDateModule),
     provideServiceWorker('ngsw-worker.js', {
       enabled: true,

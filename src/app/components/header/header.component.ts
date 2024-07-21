@@ -6,6 +6,7 @@ import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
 import { RouterModule, RouterOutlet } from '@angular/router';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @Component({
   selector: 'app-header',
@@ -24,8 +25,6 @@ import { RouterModule, RouterOutlet } from '@angular/router';
   styleUrl: './header.component.scss',
 })
 export class HeaderComponent {
-  showSideBar: boolean = true;
-  isMenuOpen = true;
   @ViewChild(MatSidenav)
   sidenav: MatSidenav | undefined;
   constructor() {}

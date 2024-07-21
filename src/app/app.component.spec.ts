@@ -1,29 +1,48 @@
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HomeComponent } from './components/home/home.component';
+import { CurrencyConverterComponent } from './pages/currency-converter/currency-converter.component';
+import { LengthConverterComponent } from './pages/length-converter/length-converter.component';
+import { RouterModule } from '@angular/router';
+import { By } from '@angular/platform-browser';
+import { HeaderComponent } from './components/header/header.component';
+
+const Routes = [
+  {
+    path: '',
+    component: HomeComponent,
+  },
+  {
+    path: 'currency-converter',
+    component: CurrencyConverterComponent,
+  },
+  {
+    path: 'length-converter',
+    component: LengthConverterComponent,
+  },
+];
 
 describe('AppComponent', () => {
+  let component: AppComponent;
+  let fixture: ComponentFixture<AppComponent>;
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AppComponent],
+      imports: [AppComponent, BrowserAnimationsModule,RouterModule.forRoot(Routes)],
     }).compileComponents();
+
+    fixture = TestBed.createComponent(AppComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
   it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
+    expect(component).toBeTruthy();
   });
 
-  it(`should have the 'conversion-calculator' title`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('conversion-calculator');
-  });
-
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, conversion-calculator');
+  it(`should contain the header component`, () => {
+    const childDebugElement = fixture.nativeElement.querySelector('app-header');
+    expect(childDebugElement).toBeTruthy();
   });
 });
