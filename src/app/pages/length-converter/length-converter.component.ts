@@ -153,7 +153,7 @@ export class LengthConverterComponent implements OnInit {
   convertLengths(value: number, from: string, to: string): number {
     if (from && to && this.lengthUnits[from] && this.lengthUnits[to]) {
       const baseValue = value * this.lengthUnits[from].id;
-      return (baseValue / this.lengthUnits[to].id);
+      return parseFloat((baseValue / this.lengthUnits[to].id).toFixed(6));
     }
     return 0;
   }

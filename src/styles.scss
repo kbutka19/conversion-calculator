@@ -10,6 +10,10 @@ body {
     font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
+* {
+    letter-spacing: 0.2px;
+}
+
 .form-container {
     width: 100%
 }
@@ -27,16 +31,17 @@ body {
 
 .page-title {
     margin-bottom: 30px !important;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 5px;
 }
 
-.result-message{
-    margin-bottom:30px
+.result-message {
+    margin-bottom: 30px
 }
-// .reset-button{
-//     border-radius: 10% !important;
-// }
 
-// .reset-button.mdc-fab{
-//     width: 66px !important;
-//     height: 40px !important;
-// }
+.reset-button{
+    color:#ff4081 !important;
+    margin-right:16px
+}
