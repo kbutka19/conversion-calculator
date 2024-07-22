@@ -10,7 +10,7 @@
           "/favicon.ico",
           "/index.html",
           "/manifest.webmanifest",
-          "/*.css",
+          "/*.scss",
           "/*.js"
         ]
       }
@@ -24,6 +24,18 @@
           "/assets/**",
           "/media/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"
         ]
+      }
+    }
+  ],
+  "dataGroups": [
+    {
+      "name": "api-call",
+      "urls": ["https://api.frankfurter.app/**"],
+      "cacheConfig": {
+        "maxAge": "1h",
+        "maxSize": 10,  
+        "strategy": "freshness",
+        "timeout": "1m"
       }
     }
   ]

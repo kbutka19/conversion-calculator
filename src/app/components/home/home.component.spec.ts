@@ -27,7 +27,7 @@ describe('HomeComponent', () => {
   });
 
   it('should display the correct image source', () => {
-    const testImageSrc = '/assets/icons/logo.png';
+    const testImageSrc = '/assets/icons/logo-256x256.png';
     fixture.detectChanges();
 
     const imageElement: HTMLImageElement = fixture.nativeElement.querySelector('.logo-image');
