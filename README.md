@@ -1,4 +1,4 @@
-# ConversionCalculator
+# Conversion Calculator
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.8.
 It is configured as a Progressive Web App (PWA), utilizing Angular Material for UI components and Angular Flex Layout for responsive design.
