@@ -75,7 +75,7 @@ describe('Currency Converter Component', () => {
   });
 
 
-  it('should enable history button whenn dates are selected ', () => {
+  it('should enable history button when dates are selected ', () => {
     // Fill the form
     cy.get('mat-select[data-cy="fromCurrency"]').click({ force: true });
     cy.get('mat-option').contains('Bulgarian Lev').click({ force: true });
